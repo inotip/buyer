@@ -9,7 +9,6 @@ confinement: classic
 
 apps:
   inotip-buyer:
-    command: electron-launch $SNAP/usr/share/inotip-buyer/bin/inotip-buyer --no-sandbox
     common-id: inotip-buyer.desktop
     environment:
       GSETTINGS_SCHEMA_DIR: $SNAP/usr/share/glib-2.0/schemas
