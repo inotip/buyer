@@ -3,47 +3,9 @@ version: "1.0.0"
 summary: Hello World Electron app
 description: |
   Simple Hello World Electron app as an example
+  
 grade: stable
 confinement: classic
-
-parts:
-  gnome:
-    plugin: nil
-    build-packages:
-      - software-properties-common
-    override-pull: |
-      add-apt-repository -y ppa:ubuntu-desktop/gnome-3-26
-      apt -y update
-  code:
-    after:
-      - gnome
-    plugin: dump
-    source: .
-    stage-packages:
-      - ibus-gtk3
-      - fcitx-frontend-gtk3
-      - gvfs-libs
-      - libasound2
-      - libgconf-2-4
-      - libglib2.0-bin
-      - libgnome-keyring0
-      - libgbm1
-      - libgtk-3-0
-      - libnotify4
-      - libnspr4
-      - libnss3
-      - libpcre3
-      - libpulse0
-      - libsecret-1-0
-      - libxss1
-      - libxtst6
-      - zlib1g
-    prime:
-      - -usr/share/doc
-      - -usr/share/fonts
-      - -usr/share/icons
-      - -usr/share/lintian
-      - -usr/share/man
 
 apps:
   inotip-buyer:
