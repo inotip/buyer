@@ -6,28 +6,30 @@ description: |
 grade: stable
 confinement: classic
 
-parts:
-  slack:
-    plugin: dump
-    source: my-deb.deb
-    source-type: deb
-    after:
-      - desktop-gtk3
-    stage-packages:
-      - libasound2
-      - libnotify4
-      - libnspr4
-      - libnss3
-      - libpcre3
-      - libpulse0
-      - libxss1
-      - libxtst6
-
 apps:
-  myApp:
-    command: bin/electron-launch $SNAP/usr/lib/inotip-buyer/inotip-buyer
-    desktop: usr/share/applications/inotip-buyer.desktop
-    # Correct the TMPDIR path for Chromium Framework/Electron to ensure
-    # libappindicator has readable resources.
+  electron-packager-hello-world:
+    command: electron-quick-start/electron-quick-start --no-sandbox
+    plugs:
+    - browser-support
+    - network
+    - network-bind
     environment:
+      # Correct the TMPDIR path for Chromium Framework/Electron to ensure
+      # libappindicator has readable resources.
       TMPDIR: $XDG_RUNTIME_DIR
+
+parts:
+  electron-quick-start:
+    plugin: nil
+    source: https://github.com/electron/electron-quick-start.git
+    override-build: |
+        npm install electron electron-packager
+        npx electron-packager . --overwrite --platform=linux --output=release-build --prune=true
+        cp -rv ./electron-quick-start-linux-* $SNAPCRAFT_PART_INSTALL/electron-quick-start
+    build-snaps:
+    - node/14/stable
+    build-packages:
+    - unzip
+    stage-packages:
+    - libnss3
+    - libnspr4
