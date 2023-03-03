@@ -4,14 +4,55 @@ summary: Hello World Electron app
 description: |
   Simple Hello World Electron app as an example
 grade: stable
-confinement: strict
-base: core20
-
-apps:
-  hello:
-    command: bin/hello
+confinement: classic
 
 parts:
-  gnu-hello:
-    source: http://ftp.gnu.org/gnu/hello/hello-2.10.tar.gz
-    plugin: autotools
+  gnome:
+    plugin: nil
+    build-packages:
+      - software-properties-common
+    override-pull: |
+      add-apt-repository -y ppa:ubuntu-desktop/gnome-3-26
+      apt -y update
+  code:
+    after:
+      - gnome
+    plugin: dump
+    source: .
+    stage-packages:
+      - ibus-gtk3
+      - fcitx-frontend-gtk3
+      - gvfs-libs
+      - libasound2
+      - libgconf-2-4
+      - libglib2.0-bin
+      - libgnome-keyring0
+      - libgbm1
+      - libgtk-3-0
+      - libnotify4
+      - libnspr4
+      - libnss3
+      - libpcre3
+      - libpulse0
+      - libsecret-1-0
+      - libxss1
+      - libxtst6
+      - zlib1g
+    prime:
+      - -usr/share/doc
+      - -usr/share/fonts
+      - -usr/share/icons
+      - -usr/share/lintian
+      - -usr/share/man
+
+apps:
+  inotip-buyer:
+    command: electron-launch $SNAP/usr/share/inotip-buyer/bin/inotip-buyer --no-sandbox
+    common-id: inotip-buyer.desktop
+    environment:
+      GSETTINGS_SCHEMA_DIR: $SNAP/usr/share/glib-2.0/schemas
+
+  url-handler:
+    command: electron-launch $SNAP/usr/share/inotip-buyer/bin/inotip-buyer --open-url --no-sandbox
+    environment:
+      GSETTINGS_SCHEMA_DIR: $SNAP/usr/share/glib-2.0/schemas
