@@ -1,17 +1,8 @@
-name: inotip
-summary: A fork of youtube-dl with additional features and patches
-description: Download inotip and patches addition to the latest.
-version: 1.0
-grade: stable
-confinement: strict
-base: core22
+name: inotip-buyer
+version: 1.0.0
+summary: Qt Hello World example
+description: A simple Qt example
 
-#apps:
-#  yt-dlp:
-#    command: bin/yt-dlp
-#    plugs: [home, network, network-bind, removable-media]
+apps:
 
-#parts:
-#  yt-dlp:
-#    plugin: python
-#    source: https://github.com/yt-dlp/yt-dlp.git
+parts:
