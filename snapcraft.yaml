@@ -7,9 +7,16 @@ description: |
 grade: stable
 confinement: classic
 
-apps:
-  hello:
-    command: bin/hello
+electron-packager-hello-world:
+    command: electron-quick-start/electron-quick-start --no-sandbox
+    plugs:
+    - browser-support
+    - network
+    - network-bind
+    environment:
+      # Correct the TMPDIR path for Chromium Framework/Electron to ensure
+      # libappindicator has readable resources.
+      TMPDIR: $XDG_RUNTIME_DIR
     
 parts:
   gnome:
