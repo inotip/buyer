@@ -6,30 +6,77 @@ description: |
 grade: stable
 confinement: classic
 
+base: core20
+compression: lzo
+
+architectures:
+  - build-on: amd64
+  - build-on: armhf
+  - build-on: arm64
+
 apps:
-  electron-packager-hello-world:
-    command: electron-quick-start/electron-quick-start --no-sandbox
+  electron-kiosk-uc20:
+    daemon: simple
+    restart-condition: always
+    extensions: [ gnome-3-38 ]
+    command-chain:
+      - env-setup
+    command: usr/local/bin/x11_kiosk_launch $SNAP/snap/command-chain/desktop-launch $SNAP/usr/bin/wrapper
     plugs:
-    - browser-support
-    - network
-    - network-bind
-    environment:
-      # Correct the TMPDIR path for Chromium Framework/Electron to ensure
-      # libappindicator has readable resources.
-      TMPDIR: $XDG_RUNTIME_DIR
+      - audio-playback
+      - browser-support
+      - hardware-observe
+      - network
+      - network-bind
+      - network-observe
+      - opengl
+      - process-control
+      - wayland
+
+# Needed by Mir and/or Xwayland
+layout:
+  /usr/share/X11:
+    bind: $SNAP/usr/share/X11
+  /usr/bin/xkbcomp:
+    symlink: $SNAP/usr/bin/xkbcomp
+  /usr/share/icons:
+    bind: $SNAP/gnome-platform/usr/share/icons
+  /usr/share/fonts:
+    bind: $SNAP/gnome-platform/usr/share/fonts
+  /usr/local/share/fonts:
+    bind: $SNAP/usr/local/share/fonts
+  /etc/fonts:
+    bind: $SNAP/gnome-platform/etc/fonts
 
 parts:
-  electron-quick-start:
+  electron-helloworld:
     plugin: nil
     source: https://github.com/electron/electron-quick-start.git
+    build-environment:
+      - PATH: "$PATH:$SNAPCRAFT_PART_BUILD/node_modules/.bin"
     override-build: |
-        npm install electron electron-packager
-        npx electron-packager . --overwrite --platform=linux --output=release-build --prune=true
-        cp -rv ./electron-quick-start-linux-* $SNAPCRAFT_PART_INSTALL/electron-quick-start
-    build-snaps:
-    - node/14/stable
-    build-packages:
-    - unzip
+      set +u # core20 base does not allow unbound variables !
+      # workaround for build.snapcraft.io builds
+      # https://bugs.launchpad.net/bugs/1886861
+      if [ -n "$http_proxy" ]; then
+        export ELECTRON_GET_USE_PROXY=1
+        export GLOBAL_AGENT_HTTP_PROXY="${http_proxy}"
+        export GLOBAL_AGENT_HTTPS_PROXY="${http_proxy}"
+      fi
+      npm install --unsafe-perm true electron-packager
+      cp $SNAPCRAFT_PROJECT_DIR/electron/main.js .
+      electron-packager . --overwrite --platform=linux \
+          --output=release-build --prune=true
+      cp -a ./electron-quick-start-linux-* $SNAPCRAFT_PART_INSTALL/electron-helloworld
     stage-packages:
-    - libnss3
-    - libnspr4
+      - libnspr4
+      - libnss3
+    build-snaps:
+      - node/14/stable
+    stage-snaps:
+      - mir-kiosk-x11
+  wrapper:
+    plugin: dump
+    source: wrapper
+    organize:
+      wrapper.sh: usr/bin/wrapper
