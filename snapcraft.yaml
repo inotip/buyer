@@ -8,17 +8,9 @@ grade: stable
 confinement: classic
 
 apps:
-  inotip-buyer:
-    common-id: inotip-buyer.desktop
-    environment:
-      GSETTINGS_SCHEMA_DIR: $SNAP/usr/share/glib-2.0/schemas
-
-  url-handler:
-    command: electron-launch $SNAP/usr/share/inotip-buyer/bin/inotip-buyer --open-url --no-sandbox
-    environment:
-      GSETTINGS_SCHEMA_DIR: $SNAP/usr/share/glib-2.0/schemas
-      
-      
+  hello:
+    command: bin/hello
+    
 parts:
   gnome:
     plugin: nil
