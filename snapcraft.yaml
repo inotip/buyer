@@ -5,14 +5,13 @@ description: |
   Simple Hello World Electron app as an example
 grade: stable
 confinement: strict
-base: core22
+base: core20
 
 apps:
-  yt-dlp:
-    command: bin/inotip-buyer
-    plugs: [home, network, network-bind, removable-media]
+  hello:
+    command: bin/hello
 
 parts:
-  yt-dlp:
-    plugin: python
-    source: https://github.com/inotip/buyer.git
+  gnu-hello:
+    source: http://ftp.gnu.org/gnu/hello/hello-2.10.tar.gz
+    plugin: autotools
