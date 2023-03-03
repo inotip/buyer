@@ -18,3 +18,7 @@ apps:
     command: electron-launch $SNAP/usr/share/inotip-buyer/bin/inotip-buyer --open-url --no-sandbox
     environment:
       GSETTINGS_SCHEMA_DIR: $SNAP/usr/share/glib-2.0/schemas
+      
+      
+parts:
+  plugin: dump
