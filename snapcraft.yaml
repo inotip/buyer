@@ -1,38 +1,18 @@
 name: inotip-buyer
-version: 1.0.0
+version: "1.0.0"
 summary: Hello World Electron app
 description: |
   Simple Hello World Electron app as an example
 grade: stable
 confinement: classic
 
-parts:
-  slack:
-    plugin: dump
-    source: my-deb.deb
-    source-type: deb
-    after:
-      - desktop-gtk3
-    stage-packages:
-      - libasound2
-      - libnotify4
-      - libnspr4
-      - libnss3
-      - libpcre3
-      - libpulse0
-      - libxss1
-      - libxtst6
-  electron-launch:
-    plugin: dump
-    source: files/
-    prepare: |
-      chmod +x bin/electron-launch
-
 apps:
-  myApp:
-    command: bin/electron-launch $SNAP/usr/lib/inotip-buyer/inotip-buyer
-    desktop: usr/share/applications/inotip-buyer.desktop
-    # Correct the TMPDIR path for Chromium Framework/Electron to ensure
-    # libappindicator has readable resources.
-    environment:
-      TMPDIR: $XDG_RUNTIME_DIR
+  hello-node-snap:
+    command: bin/hello-node-snap
+    plugs: [network]
+
+parts:
+  hello-node-snap:
+    plugin: nodejs
+    node-packages:
+      - hello-node-snap
