@@ -20,7 +20,8 @@ apps:
       GSETTINGS_SCHEMA_DIR: $SNAP/usr/share/glib-2.0/schemas
       
       
-gnome:
+parts:
+  gnome:
     plugin: nil
     build-packages:
       - software-properties-common
